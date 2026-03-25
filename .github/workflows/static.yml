@@ -33,13 +33,25 @@ jobs:
       - name: Build
         run: npm run build
 
+      - name: Prepare Pages artifact
+        run: |
+          rm -rf .pages-dist
+          if [ -d dist ]; then
+            cp -R dist .pages-dist
+          elif [ -d sources/dist ]; then
+            cp -R sources/dist .pages-dist
+          else
+            echo "No build output directory found."
+            exit 1
+          fi
+
       - name: Setup Pages
         uses: actions/configure-pages@v5
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: ./dist
+          path: ./.pages-dist
 
   deploy:
     environment:

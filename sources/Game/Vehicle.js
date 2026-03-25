@@ -384,7 +384,7 @@ export class Vehicle {
 
     jump( _impulseValue = 100, _callback = null )
     {
-        if (this.floorContact && this.game.ticker.elapsed - this.lastJumpInstance >= 0.2)
+        if (this.floorContact && this.game.ticker.elapsed - this.lastJumpInstance >= 0)
         {
             this.lastJumpInstance = this.game.ticker.elapsed;
             this.body.applyImpulse({ x: 20 * Math.random(), y: 40, z: 20 * Math.random() }, true);

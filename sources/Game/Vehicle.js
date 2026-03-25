@@ -97,7 +97,7 @@ export class Vehicle {
 
         const colliders = [
             // Keep the chassis weight low while leaving it centered between the axles.
-            { parameters: [1.3, 0.4, 0.85], position: { x: 0, y: -0.1, z: 0 }, mass: 2.5, centerOfMass: { x: 0, y: -0.8, z: 0 } },
+            { parameters: [1.3, 0.4, 0.85], position: { x: 0, y: -0.1, z: 0 }, mass: 2.5, centerOfMass: { x: 0, y: -0.2, z: 0 } },
             { parameters: [0.5, 0.15, 0.65], position: { x: 0, y: 0.4, z: 0 }, mass: 0 },
             { parameters: [1.5, 0.5, 0.9], position: { x: 0.1, y: -0.2, z: 0 }, mass: 0 }
         ]

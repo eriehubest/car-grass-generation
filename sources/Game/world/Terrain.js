@@ -130,7 +130,7 @@ export class Terrain {
         this.container.position.y += 1.2
         this.container.position.x += 10
 
-        this.setDebug();
+        // this.setDebug();
     }
 
     setBoard() {
@@ -458,4 +458,6 @@ export class Terrain {
             colorMix
         }
     }
+
+    setDebug() {}
 }

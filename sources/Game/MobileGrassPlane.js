@@ -7,7 +7,7 @@ export class MobileGrassPlane
     {
         this.game = Game.getInstance()
 
-        this.renderRadius = 21.2
+        this.renderRadius = 30
         this.spacing = 0.36
         this.jitter = 0.86
         this.baseWidth = 0.34
@@ -19,7 +19,7 @@ export class MobileGrassPlane
         this.trailHistoryStart = 0
         this.trailHistoryEnd = 0.93
         this.clampStep = 0.04
-        this.centerSnapStep = 4.5
+        this.centerSnapStep = 10
         this.fadeRingSize = 4
         this.centerX = null
         this.centerZ = null

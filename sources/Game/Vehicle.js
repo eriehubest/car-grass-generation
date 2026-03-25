@@ -387,7 +387,8 @@ export class Vehicle {
         if (this.floorContact && this.game.ticker.elapsed - this.lastJumpInstance >= 0.2)
         {
             this.lastJumpInstance = this.game.ticker.elapsed;
-            this.body.applyImpulse({ x: 0, y: 20, z: 0 }, true);
+            this.body.applyImpulse({ x: 20 * Math.random(), y: 40, z: 20 * Math.random() }, true);
+            this.body.setRotation({ x: 50, y: 360, z: 60})
         }
             
     }

@@ -125,7 +125,7 @@ export class Terrain {
         this.grassHeightMax = 2.39
 
         this.setBoard()
-        this.setTerrainPlane()
+        // this.setTerrainPlane()
 
         this.container.position.y += 1.2
         this.container.position.x += 10

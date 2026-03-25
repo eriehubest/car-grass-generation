@@ -1,7 +1,8 @@
 import * as THREE from 'three/webgpu'
 import { EXRLoader } from 'three/examples/jsm/Addons.js'
 import { Game } from './Game.js'
-import { Terrain } from './world/terrain.js'
+import { getAssetPath } from './utilities/assetPath.js'
+import { Terrain } from './world/Terrain.js'
 
 export class World {
     constructor() {
@@ -13,7 +14,7 @@ export class World {
 
         const environmentLoader = new EXRLoader()
 
-        environmentLoader.load('/background/narrow_moonlit_road_4k.exr', (environmentMap) => {
+        environmentLoader.load(getAssetPath('background/narrow_moonlit_road_4k.exr'), (environmentMap) => {
             environmentMap.mapping = THREE.EquirectangularReflectionMapping
 
             this.game.scene.background = environmentMap

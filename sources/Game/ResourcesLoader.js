@@ -3,6 +3,7 @@ import { DRACOLoader } from 'three/addons/loaders/DRACOLoader.js'
 import { KTX2Loader } from 'three/addons/loaders/KTX2Loader.js'
 import * as THREE from 'three/webgpu'
 import { Game } from './Game.js'
+import { getAssetPath } from './utilities/assetPath.js'
 
 export class ResourcesLoader
 {
@@ -27,13 +28,13 @@ export class ResourcesLoader
         else if(_type === 'textureKtx')
         {
             loader = new KTX2Loader()
-            loader.setTranscoderPath('/basis/')
+            loader.setTranscoderPath(getAssetPath('basis/'))
             loader.detectSupport(this.game.rendering.renderer)
         }
         else if(_type === 'draco')
         {
             loader = new DRACOLoader()
-            loader.setDecoderPath('/draco/')
+            loader.setDecoderPath(getAssetPath('draco/'))
             loader.preload()
         }
         else if(_type === 'gltf')

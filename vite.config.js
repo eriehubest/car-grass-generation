@@ -7,11 +7,21 @@ export default {
     root: 'sources/',
     publicDir: '../static/',
     base: '/car-grass-generation/',
-    server: {
+
+    build: 
+    {
+        outDir: '../dist',
+        emptyOutDir: true,
+    },
+
+    server: 
+    {
         host: true,
         open: true,
     },
-    plugins: [
+
+    plugins: 
+    [
         wasm(),
         glsl(),
         tailwindcss(),

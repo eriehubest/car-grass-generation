@@ -60,7 +60,7 @@ export class Game {
 
         this.resources = await this.resourceLoader.load([
             ['respawnsReferencesModel', 'respawns/respawnsReferences-compressed.glb', 'gltf'],
-            ['vehicleModel', 'vehicle/default.glb', 'gltf',],
+            ['vehicleModel', 'vehicle/default-compressed.glb', 'gltf',],
 
         ],
             // (_toLoad, _total) => console.log(_toLoad + ' out of ' + _total + ' to load ')

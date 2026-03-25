@@ -238,6 +238,17 @@ export class Vehicle {
                 child.receiveShadow = true
             }
 
+            if (child.isMesh && child.name === 'wheelSuspension002') {
+                const materials = Array.isArray(child.material) ? child.material : [ child.material ]
+
+                for (const material of materials) {
+                    if (material?.color?.isColor) {
+                        material.color.set('#494949')
+                        material.needsUpdate = true
+                    }
+                }
+            }
+
             for (const search of searchList) {
                 const match = child.name.match(search)
                 if (match)

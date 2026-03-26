@@ -27,12 +27,23 @@ export class Game {
             return Game.instance;
 
         Game.instance = this;
-        this.init();
+        this.init().catch((error) => {
+            console.error(error);
+            this.showLoadingError();
+        });
     }
 
     async init() {
         this.domElement = document.querySelector('.game');
         this.canvasElement = this.domElement.querySelector('.js-canvas');
+        this.loadingElement = document.querySelector('.loading-screen');
+        this.loadingFillElement = this.loadingElement?.querySelector('.loading-screen__fill');
+        this.loadingStatusElement = this.loadingElement?.querySelector('.loading-screen__status');
+        this.loadingPercentageElement = this.loadingElement?.querySelector('.loading-screen__percentage');
+        this.loadingProgress = 0;
+        this.loadingTargetProgress = 0;
+        this.loadingAnimationFrame = null;
+        this.startLoadingProgressAnimation();
 
         // initialization
         this.scene = new THREE.Scene();
@@ -58,13 +69,21 @@ export class Game {
 
         this.RAPIER = await import('@dimforge/rapier3d')
 
+        this.setLoadingTargetProgress(0)
+
         this.resources = await this.resourceLoader.load([
             ['respawnsReferencesModel', 'respawns/respawnsReferences-compressed.glb', 'gltf'],
             ['vehicleModel', 'vehicle/default-compressed.glb', 'gltf',],
 
         ],
-            // (_toLoad, _total) => console.log(_toLoad + ' out of ' + _total + ' to load ')
+            (_toLoad, _total) => {
+                const loaded = _total - _toLoad;
+                this.setLoadingTargetProgress(loaded / _total);
+            }
         )
+
+        this.setLoadingTargetProgress(1)
+        await this.waitForLoadingProgress(1)
 
         this.respawns = new Respawns(import.meta.env.VITE_PLAYER_SPAWN || 'landing')
         this.scene.background = null
@@ -81,7 +100,99 @@ export class Game {
         // this.grass = new Grass()
         this.grass = new MobileGrassPlane()
         this.rendering.setPostprocessing();
-        this.rendering.start();
+        this.rendering.start()
+        await this.hideLoadingScreen()
+    }
+
+    startLoadingProgressAnimation()
+    {
+        const update = () =>
+        {
+            const difference = this.loadingTargetProgress - this.loadingProgress;
+
+            if(Math.abs(difference) < 0.001)
+                this.loadingProgress = this.loadingTargetProgress;
+            else
+                this.loadingProgress += difference * 0.12;
+
+            this.renderLoadingProgress(this.loadingProgress);
+            this.loadingAnimationFrame = requestAnimationFrame(update);
+        };
+
+        update();
+    }
+
+    setLoadingTargetProgress(_progress)
+    {
+        this.loadingTargetProgress = THREE.MathUtils.clamp(_progress, 0, 1);
+    }
+
+    renderLoadingProgress(_progress)
+    {
+        const progress = THREE.MathUtils.clamp(_progress, 0, 1);
+        const percentage = Math.round(progress * 100);
+
+        if(this.loadingFillElement)
+            this.loadingFillElement.style.transform = `scaleX(${progress})`;
+
+        if(this.loadingPercentageElement)
+            this.loadingPercentageElement.textContent = `${percentage}%`;
+
+        if(this.loadingStatusElement)
+            this.loadingStatusElement.textContent = progress < 1 ? `Loading ${percentage}%` : 'Ready';
+    }
+
+    waitForLoadingProgress(_target)
+    {
+        return new Promise((resolve) => {
+            const check = () =>
+            {
+                if(this.loadingProgress >= _target - 0.001)
+                {
+                    resolve();
+                    return;
+                }
+
+                requestAnimationFrame(check);
+            };
+
+            check();
+        });
+    }
+
+    hideLoadingScreen()
+    {
+        if(!this.loadingElement)
+            return Promise.resolve();
+
+        return new Promise((resolve) => {
+            requestAnimationFrame(() => {
+                requestAnimationFrame(() => {
+                    this.loadingElement.classList.add('is-hidden');
+                    setTimeout(() => {
+                        if(this.loadingAnimationFrame !== null)
+                        {
+                            cancelAnimationFrame(this.loadingAnimationFrame);
+                            this.loadingAnimationFrame = null;
+                        }
+
+                        resolve();
+                    }, 700);
+                });
+            });
+        });
+    }
+
+    showLoadingError()
+    {
+        if(this.loadingAnimationFrame !== null)
+            cancelAnimationFrame(this.loadingAnimationFrame);
+
+        if(this.loadingStatusElement)
+            this.loadingStatusElement.textContent = 'Load Failed';
+
+        if(this.loadingPercentageElement)
+            this.loadingPercentageElement.textContent = 'Error';
     }
 
     setPauseInput() {

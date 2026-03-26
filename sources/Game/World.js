@@ -1,5 +1,5 @@
 import * as THREE from 'three/webgpu'
-import { EXRLoader } from 'three/examples/jsm/Addons.js'
+import { EXRLoader, HDRLoader } from 'three/examples/jsm/Addons.js'
 import { Game } from './Game.js'
 import { getAssetPath } from './utilities/assetPath.js'
 import { Terrain } from './world/Terrain.js'
@@ -13,13 +13,23 @@ export class World {
         this.game.scene.add(this.container)
 
         const environmentLoader = new EXRLoader()
+        const hdrLoader = new HDRLoader();
 
-        environmentLoader.load(getAssetPath('background/narrow_moonlit_road_4k.exr'), (environmentMap) => {
+        // environmentLoader.load(getAssetPath('background/narrow_moonlit_road_4k.exr'), (environmentMap) => {
+        //     environmentMap.mapping = THREE.EquirectangularReflectionMapping
+
+        //     this.game.scene.background = environmentMap
+        //     this.game.scene.backgroundBlurriness = 0.5
+        //     this.game.scene.environment = environmentMap
+        // })
+
+        hdrLoader.load(getAssetPath('background/spruit_sunrise.hdr'), (environmentMap) => {
             environmentMap.mapping = THREE.EquirectangularReflectionMapping
 
             this.game.scene.background = environmentMap
             this.game.scene.backgroundBlurriness = 0.5
             this.game.scene.environment = environmentMap
+            this.game.scene.environmentIntensity = 0.4
         })
 
         this.rampSize = {

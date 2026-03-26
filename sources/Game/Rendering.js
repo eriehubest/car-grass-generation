@@ -99,7 +99,7 @@ export class Rendering {
     {
         if(this.usePostprocessing && this.postProcessing)
             this.postProcessing.render()
-        else
+        else if(this.game.view?.camera)
             this.renderer.render(this.game.scene, this.game.view.camera)
     }
 }
